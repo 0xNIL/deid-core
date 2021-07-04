@@ -2,15 +2,17 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title IValidatable
+ * @title ITXValidator
  * @author Francesco Sullo <francesco@sullo.co>
  */
 
-interface IValidatable {
+interface ITXValidator {
 
     event ValidForByGroupIdUpdated(uint groupId, uint validForByGroupId);
     event ValidatorAdded(uint groupId, address validator);
     event ValidatorRemoved(uint groupId, address validator);
+
+    function updateDefaultValidator(address newDefaultValidator_) external;
 
     function isValidatorForGroup(uint groupId_, address validator_) external view returns (bool);
 

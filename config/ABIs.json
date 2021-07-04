@@ -1,7 +1,7 @@
 {
   "when": "2021-07-04T19:11:20.433Z",
   "contracts": {
-    "Validatable": [
+    "TXValidator": [
       {
         "anonymous": false,
         "inputs": [

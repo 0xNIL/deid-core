@@ -8,7 +8,7 @@ const ABIs = {
 }
 
 let names = [
-  'Validatable',
+  'TXValidator',
   'DeIDStore',
   'DeIDManager',
   'DeIDClaimer',

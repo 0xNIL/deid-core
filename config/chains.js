@@ -13,9 +13,9 @@ const chains = {
   mumbai: [80001, 0, false],
 
   // prod
-  matic: [137, 1, false],
-  bsc_mainnet: [56, 2, false],
-  ethereum: [1, 3, false],
+  ethereum: [1, 1, false],
+  matic: [137, 2, false],
+  bsc_mainnet: [56, 3, false],
 
   // future
   avalance: [43114, 7, false],

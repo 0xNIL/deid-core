@@ -12,26 +12,20 @@ describe("DeIDRegistry", async function () {
   let identity
   let Registry
   let registry
+  let TXValidator
+  let txValidator
 
   let names
   let bytes32Names
   let addresses
 
-  let owner, validator, org, bob, alice, mark, joe, bill, wikileaks, assange
+  let owner, validator
   let addr0 = '0x0000000000000000000000000000000000000000'
 
   before(async function () {
     const signers = await ethers.getSigners()
     owner = signers[0];
     validator = signers[1];
-    org = signers[2];
-    bob = signers[3];
-    alice = signers[4];
-    wikileaks = signers[5];
-    assange = signers[6];
-    mark = signers[7];
-    joe = signers[8];
-    bill = signers[9];
   })
 
   async function initNetworkAndDeploy() {
@@ -45,12 +39,12 @@ describe("DeIDRegistry", async function () {
     await claimer.deployed();
     // identity manager
 
-    const Validatable = await ethers.getContractFactory("Validatable");
-    const validatable = await Validatable.deploy();
-    await validatable.deployed();
+    TXValidator = await ethers.getContractFactory("TXValidator");
+    txValidator = await TXValidator.deploy(validator.address);
+    await txValidator.deployed();
 
     DeIDManager = await ethers.getContractFactory("DeIDManager");
-    identity = await DeIDManager.deploy(store.address, claimer.address, validatable.address);
+    identity = await DeIDManager.deploy(store.address, claimer.address, txValidator.address);
     await identity.deployed();
 
     const MANAGER_ROLE = await store.MANAGER_ROLE()
@@ -58,24 +52,8 @@ describe("DeIDRegistry", async function () {
     await store.grantRole(MANAGER_ROLE, claimer.address)
     await claimer.grantRole(MANAGER_ROLE, identity.address)
 
-    names = [
-        'DeIDStore',
-        'DeIDManager',
-        'DeIDClaimer'
-    ]
-    bytes32Names = names.map(e => ethers.utils.formatBytes32String(e))
-
-    addresses = [
-        store.address,
-        identity.address,
-        claimer.address
-    ]
-
     Registry = await ethers.getContractFactory("DeIDRegistry");
-    registry = await Registry.deploy(
-        bytes32Names,
-        addresses
-    );
+    registry = await Registry.deploy();
     await registry.deployed();
 
   }
@@ -91,6 +69,25 @@ describe("DeIDRegistry", async function () {
     });
 
     it("should verify that all the contracts are set", async function () {
+
+      names = [
+        'TXValidator',
+        'DeIDStore',
+        'DeIDManager',
+        'DeIDClaimer'
+      ]
+      bytes32Names = names.map(e => utils.stringToBytes32(e))
+
+      addresses = [
+        txValidator.address,
+        store.address,
+        identity.address,
+        claimer.address
+      ]
+
+      for (let i=0;i< names.length;i++) {
+        await registry.setData(bytes32Names[i], addresses[i])
+      }
 
       for (let i=0;i< names.length;i++) {
         assert.equal(await registry.registry(bytes32Names[i]), addresses[i])
