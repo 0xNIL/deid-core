@@ -9,13 +9,13 @@ pragma solidity ^0.8.0;
  * @dev Manages identities
  */
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 import "./ClaimerCaller.sol";
 import "./StoreCaller.sol";
 import "./interfaces/IDeIDManager.sol";
 
-interface IValidatableMinimal {
+interface ITXValidatorMinimal {
 
     function getChainId() external view returns (uint256);
 
@@ -26,7 +26,7 @@ interface IValidatableMinimal {
 
 contract DeIDManager is ClaimerCaller, StoreCaller, IDeIDManager {
 
-    IValidatableMinimal internal _validator;
+    ITXValidatorMinimal public validator;
     uint private _currentTweedentityId;
 
     function _getNextTweedentityId()
@@ -49,7 +49,7 @@ contract DeIDManager is ClaimerCaller, StoreCaller, IDeIDManager {
         bytes memory signature_
     ) {
         require(
-            _validator.isSignedByValidator(
+            validator.isSignedByValidator(
                 appId_,
                 encodeForSignature(
                     msg.sender,
@@ -72,7 +72,7 @@ contract DeIDManager is ClaimerCaller, StoreCaller, IDeIDManager {
     StoreCaller(store_)
     ClaimerCaller(claimer_)
     {
-        _validator = IValidatableMinimal(validator_);
+        validator = ITXValidatorMinimal(validator_);
     }
 
     function setMyIdentity() external override
@@ -90,7 +90,7 @@ contract DeIDManager is ClaimerCaller, StoreCaller, IDeIDManager {
     onlyIfStoreSet
     onlySignedByValidator(appId_, id_, timestamp_, signature_)
     {
-        _validator.isValidForGroupId(appId_, timestamp_);
+        validator.isValidForGroupId(appId_, timestamp_);
         store.setAddressAndIdByAppId(appId_, msg.sender, id_);
     }
 
@@ -105,9 +105,9 @@ contract DeIDManager is ClaimerCaller, StoreCaller, IDeIDManager {
     {
         for (uint i = 0; i < appIds_.length; i++) {
             if (appIds_[i] > 0) {
-                _validator.isValidForGroupId(appIds_[i], timestamp_);
+                validator.isValidForGroupId(appIds_[i], timestamp_);
                 require(
-                    _validator.isSignedByValidator(
+                    validator.isSignedByValidator(
                         appIds_[i],
                         encodeForSignature(
                             msg.sender,
@@ -150,7 +150,7 @@ contract DeIDManager is ClaimerCaller, StoreCaller, IDeIDManager {
     onlyIfClaimerSet
     onlySignedByValidator(appId_, id_, timestamp_, signature_)
     {
-        _validator.isValidForGroupId(appId_, timestamp_);
+        validator.isValidForGroupId(appId_, timestamp_);
         claimer.setClaim(appId_, id_, msg.sender);
     }
 
@@ -164,7 +164,7 @@ contract DeIDManager is ClaimerCaller, StoreCaller, IDeIDManager {
     onlyIfClaimerSet
     onlySignedByValidator(appId_, id_, timestamp_, signature_)
     {
-        _validator.isValidForGroupId(appId_, timestamp_);
+        validator.isValidForGroupId(appId_, timestamp_);
         claimer.setClaimedIdentity(appId_, id_, msg.sender);
     }
 
@@ -180,49 +180,9 @@ contract DeIDManager is ClaimerCaller, StoreCaller, IDeIDManager {
             abi.encodePacked(
                 "\x19\x00",
                 address_,
-                _validator.getChainId(),
+                validator.getChainId(),
                 groupId_,
                 id_,
-                timestamp_
-            )
-        );
-    }
-
-    function encodeForSignature(
-        address address_,
-        uint[] memory groupIds_,
-        uint[] memory ids_,
-        uint timestamp_
-    ) public view override
-    returns (bytes32)
-    {
-        return keccak256(
-            abi.encodePacked(
-                "\x19\x00",
-                address_,
-                _validator.getChainId(),
-                groupIds_,
-                ids_,
-                timestamp_
-            )
-        );
-    }
-
-    function encodeForSignature(
-        address address_,
-        uint groupId_,
-        uint[] memory ids_,
-        uint timestamp_
-    ) public view override
-    returns (bytes32)
-    {
-        return keccak256(
-            abi.encodePacked(
-                "\x19\x00",
-                address_,
-                _validator.getChainId(),
-                groupId_,
-                ids_,
                 timestamp_
             )
         );

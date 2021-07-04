@@ -2,33 +2,46 @@
 pragma solidity ^0.8.0;
 
 /**
- * @title Validatable
+ * @title TXValidator
  * @version 0.0.1
  * @author Francesco Sullo <francesco@sullo.co>
  */
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-import "./interfaces/IValidatable.sol";
+import "./interfaces/ITXValidator.sol";
 
-contract Validatable is Ownable, IValidatable {
+contract TXValidator is Ownable, ITXValidator {
 
     using ECDSA for bytes32;
 
     mapping(uint => mapping(address => bool)) private _validatorsByGroupId;
     mapping(address => bytes32) private _validatorsNames;
 
-    mapping(uint => uint) public validForByGroupId;
+    address public defaultValidator;
     uint public defaultValidFor = 3e4;
+    mapping(uint => uint) public validForByGroupId;
 
     function isValidatorForGroup(uint groupId_, address validator_)
     external view override
     returns (bool)
     {
         return _validatorsByGroupId[groupId_][validator_];
+    }
+
+    constructor(
+        address defaultValidator_
+    ) {
+        defaultValidator = defaultValidator_;
+    }
+
+    function updateDefaultValidator(address newDefaultValidator_) external override
+    onlyOwner
+    {
+        defaultValidator = newDefaultValidator_;
     }
 
     function _addValidator(uint groupId_, bytes32 validatorName_, address validator_) internal
@@ -124,7 +137,7 @@ contract Validatable is Ownable, IValidatable {
     {
         address validator = ECDSA.recover(hash_, signature_);
 //        console.log("validator %s", validator);
-        if (_validatorsByGroupId[groupId_][validator]) {
+        if (validator == defaultValidator || _validatorsByGroupId[groupId_][validator]) {
             return validator;
         } else {
             return address(0);

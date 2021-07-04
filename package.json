@@ -8,21 +8,25 @@
     "test": "npx hardhat test",
     "export": "shell/exportABIs.js",
     "compile": "npx hardhat compile",
-    "lint": "solium -d contracts/"
+    "lint": "solium -d contracts/ && eslint src/**/*.js"
   },
   "publishConfig": {
     "access": "public"
   },
   "license": "ISC",
+  "dependencies": {
+    "chai": "^4.3.4",
+    "ethers": "^5.0.32"
+  },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-etherscan": "^2.1.1",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@nomiclabs/hardhat-web3": "^2.0.0",
     "@openzeppelin/contracts": "^4.0.0",
-    "chai": "^4.3.4",
+    "eslint": "^7.24.0",
+    "eslint-plugin-node": "^11.1.0",
     "ethereum-waffle": "^3.3.0",
-    "ethers": "^5.0.32",
     "fs-extra": "^9.1.0",
     "hardhat": "^2.1.2",
     "hardhat-gas-reporter": "^1.0.4",

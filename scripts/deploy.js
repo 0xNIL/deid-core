@@ -8,8 +8,9 @@ const args = require('../arguments')
 const fs = require('fs-extra')
 const path = require('path')
 
-const {chains, utils} = require('../src')
+const chains = require('../config/chains')
 const {getSignature} = require('../src/helpers')
+const utils = require('../src/utils')
 
 async function main() {
     // Hardhat always runs the compile task when running scripts with its command
@@ -55,63 +56,105 @@ async function deploy(ethers) {
         validator = '0x70997970c51812dc3a010c7d01b50e0d17dc79c8'
     }
 
+    let argumentsDir = path.resolve(__dirname, '../tmp/arguments', process.env.DEPLOY_NETWORK)
+
+    await fs.ensureDir(argumentsDir)
+
     // store
     const DeIDStore = await ethers.getContractFactory("DeIDStore");
-    const tweedentities = await DeIDStore.deploy(
+    const store = await DeIDStore.deploy(
         currentChain[1]
     );
-    await tweedentities.deployed();
+    await store.deployed();
+
+    await fs.writeFile(
+        path.join(argumentsDir, 'DeIDStore.js'),
+        `module.exports = [
+    '${currentChain[1]}'
+]`)
 
     // claimer
     const DeIDClaimer = await ethers.getContractFactory("DeIDClaimer");
-    const tweedentityClaimer = await DeIDClaimer.deploy(
-        tweedentities.address
+    const claimer = await DeIDClaimer.deploy(
+        store.address
     );
-    await tweedentityClaimer.deployed();
+    await claimer.deployed();
+
+    await fs.writeFile(
+        path.join(argumentsDir, 'DeIDClaimer.js'),
+        `module.exports = [
+    '${store.address}'
+]`)
+
+    // txValidator
+    const TXValidator = await ethers.getContractFactory("TXValidator");
+    const txValidator = await TXValidator.deploy(validator);
+    await txValidator.deployed();
+
+    await fs.writeFile(
+        path.join(argumentsDir, 'TXValidator.js'),
+        `module.exports = [
+    '${validator}'
+]`)
 
     // identity manager
     const DeIDManager = await ethers.getContractFactory("DeIDManager");
-    const tweedentityManager = await DeIDManager.deploy(
-        tweedentities.address,
-        tweedentityClaimer.address
-            [1, 2, 3],
-        [validator, validator, validator]
+    const manager = await DeIDManager.deploy(
+        store.address,
+        claimer.address,
+        txValidator.address
     );
 
-    const MANAGER_ROLE = await tweedentities.MANAGER_ROLE()
-    await tweedentities.grantRole(MANAGER_ROLE, tweedentityManager.address)
-    await tweedentities.grantRole(MANAGER_ROLE, tweedentityClaimer.address)
-    await tweedentityClaimer.grantRole(MANAGER_ROLE, tweedentityManager.address)
+    await fs.writeFile(
+        path.join(argumentsDir, 'DeIDManager.js'),
+        `module.exports = [
+    '${store.address}',
+    '${claimer.address}',
+    '${txValidator.address}'
+]`)
+
+    const MANAGER_ROLE = await store.MANAGER_ROLE()
+    await store.grantRole(MANAGER_ROLE, manager.address)
+    await store.grantRole(MANAGER_ROLE, claimer.address)
+    await claimer.grantRole(MANAGER_ROLE, manager.address)
 
     if (devMode) {
         const timestamp = (await ethers.provider.getBlock()).timestamp - 1
         const tid = 5876772
         const bob = (await ethers.getSigners())[3]
-        const signature = await getSignature(ethers, tweedentityManager, bob.address, 1, tid, timestamp)
-        await tweedentityManager.connect(bob).setIdentity(1, tid, timestamp, signature)
+        const signature = await getSignature(ethers, manager, bob.address, 1, tid, timestamp)
+        await manager.connect(bob).setIdentity(1, tid, timestamp, signature)
     }
 
     let names = [
+        'TXValidator',
         'DeIDStore',
         'DeIDManager',
         'DeIDClaimer'
     ]
-    let bytes32Names = names.map(e => ethers.utils.formatBytes32String(e))
+    let bytes32Names = names.map(e => utils.stringToBytes32(e))
 
     let addresses = [
-        tweedentities.address,
-        tweedentityManager.address,
-        tweedentityClaimer.address
+        txValidator.address,
+        store.address,
+        manager.address,
+        claimer.address
     ]
 
     const Registry = await ethers.getContractFactory("DeIDRegistry");
-    const registry = await Registry.deploy(
-        bytes32Names,
-        addresses
-    );
+    const registry = await Registry.deploy();
     await registry.deployed();
 
+    for (let i=0;i< names.length;i++) {
+        await registry.setData(bytes32Names[i], addresses[i])
+    }
+
+
     let res = {
+        TxValidator: txValidator.address,
+        DeIDStore: store.address,
+        DeIDManager: manager.address,
+        DeIDClaimer: claimer.address,
         DeIDRegistry: registry.address
     }
 

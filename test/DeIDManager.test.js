@@ -8,8 +8,8 @@ describe("DeIDManager", async function () {
   let store
   let DeIDClaimer
   let claimer
-  let Validatable
-  let validatable
+  let TXValidator
+  let txValidator
   let DeIDManager
   let identity
 
@@ -41,7 +41,7 @@ describe("DeIDManager", async function () {
     joe = signers[8];
     bill = signers[9];
     await initNetworkAndDeploy()
-    chainId = await validatable.getChainId()
+    chainId = await txValidator.getChainId()
   })
 
   async function initNetworkAndDeploy() {
@@ -51,14 +51,12 @@ describe("DeIDManager", async function () {
     DeIDClaimer = await ethers.getContractFactory("DeIDClaimer");
     claimer = await DeIDClaimer.deploy(store.address);
     await claimer.deployed();
-    Validatable = await ethers.getContractFactory("Validatable");
-    validatable = await Validatable.deploy();
-    await validatable.deployed();
-    await validatable.addValidator(1, utils.stringToBytes32('tweedentityV2'), validator.address)
-    await validatable.addValidator(2, utils.stringToBytes32('tweedentityV2'), validator.address)
-    await validatable.addValidator(3, utils.stringToBytes32('tweedentityV2'), validator.address)
+    TXValidator = await ethers.getContractFactory("TXValidator");
+    txValidator = await TXValidator.deploy(validator.address);
+    await txValidator.deployed();
+    await txValidator.addValidator(1, utils.stringToBytes32('tweedentityV2'), validator.address)
     DeIDManager = await ethers.getContractFactory("DeIDManager");
-    identity = await DeIDManager.deploy(store.address, claimer.address, validatable.address);
+    identity = await DeIDManager.deploy(store.address, claimer.address, txValidator.address);
     await identity.deployed();
     const MANAGER_ROLE = await store.MANAGER_ROLE()
     await store.grantRole(MANAGER_ROLE, identity.address)
@@ -161,7 +159,6 @@ describe("DeIDManager", async function () {
           .withArgs(0, 1, bob.address);
     });
 
-
     it('should throw if app not supported', async function () {
 
       tid = 54433433
@@ -170,7 +167,7 @@ describe("DeIDManager", async function () {
 
       await assertThrowsMessage(
           identity.connect(bob).setIdentity(6, tid, timestamp, signature),
-          'Invalid signature')
+          'Unsupported app')
     })
 
     it('should throw if already set', async function () {
@@ -205,7 +202,7 @@ describe("DeIDManager", async function () {
       timestamp = (await getTimestamp() - 100)
       signature = getSignature(ethers, identity, alice.address, 1, tid, timestamp)
 
-      await validatable.updateTimestampValidFor(1, 5);
+      await txValidator.updateTimestampValidFor(1, 5);
 
       await assertThrowsMessage(
           identity.connect(alice).setIdentity(1, tid, timestamp, signature),

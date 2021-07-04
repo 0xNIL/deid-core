@@ -9,7 +9,7 @@ pragma solidity ^0.8.0;
  */
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 import "./interfaces/IApplication.sol";
 
@@ -22,7 +22,7 @@ contract Application is AccessControl, IApplication {
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        apps[0] = keccak256("default");
+        apps[0] = 0x64656661756c7400000000000000000000000000000000000000000000000000;
     }
 
     function addApp(

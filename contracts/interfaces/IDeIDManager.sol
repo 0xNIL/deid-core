@@ -23,8 +23,4 @@ interface IDeIDManager {
 
     function encodeForSignature(address address_, uint groupId_, uint id_, uint timestamp_) external view returns (bytes32);
 
-    function encodeForSignature(address address_, uint[] memory groupIds_, uint[] memory ids_, uint timestamp_) external view returns (bytes32);
-
-    function encodeForSignature(address address_, uint groupId_, uint[] memory ids_, uint timestamp_) external view returns (bytes32);
-
 }

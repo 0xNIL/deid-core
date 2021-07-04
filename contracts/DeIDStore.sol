@@ -9,7 +9,7 @@ pragma solidity ^0.8.0;
  */
 
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 import "./Application.sol";
 import "./interfaces/IDeIDStore.sol";
 
@@ -63,9 +63,9 @@ contract DeIDStore is Application, IDeIDStore {
             "chainProgressiveId_ must be < 100"
         );
         chainProgressiveId = chainProgressiveId_;
-        addApp(keccak256("twitter"));
-        addApp(keccak256("reddit"));
-        addApp(keccak256("instagram"));
+        addApp(0x7477697474657200000000000000000000000000000000000000000000000000);
+        addApp(0x7265646469740000000000000000000000000000000000000000000000000000);
+        addApp(0x696e7374616772616d0000000000000000000000000000000000000000000000);
     }
 
     function setExtraKey(
