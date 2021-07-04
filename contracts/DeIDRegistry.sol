@@ -25,6 +25,7 @@ contract DeIDRegistry is Ownable, IDeIDRegistry {
     {
         if (address_ != address(0)) {
             registry[name_] = address_;
+            emit RegistryUpdated(name_, address_);
         }
     }
 
