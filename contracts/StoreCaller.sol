@@ -42,12 +42,8 @@ contract StoreCaller is AccessControl {
         _;
     }
 
-    constructor(
-        address store_
-    )
-    {
+    constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        setStore(store_);
     }
 
     function setStore(

@@ -44,12 +44,8 @@ contract ClaimerCaller is AccessControl {
         _;
     }
 
-    constructor(
-        address claimer_
-    )
-    {
+    constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        setClaimer(claimer_);
     }
 
     function setClaimer(

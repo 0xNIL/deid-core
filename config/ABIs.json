@@ -1,18 +1,7 @@
 {
-  "when": "2021-07-05T00:19:42.486Z",
+  "when": "2021-07-05T17:19:18.853Z",
   "contracts": {
     "TXValidator": [
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "defaultValidator_",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-      },
       {
         "anonymous": false,
         "inputs": [
@@ -120,19 +109,6 @@
             "internalType": "uint256",
             "name": "",
             "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "defaultValidator",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
           }
         ],
         "stateMutability": "view",
@@ -294,19 +270,6 @@
           }
         ],
         "name": "transferOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "newDefaultValidator_",
-            "type": "address"
-          }
-        ],
-        "name": "updateDefaultValidator",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
