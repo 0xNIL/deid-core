@@ -1,5 +1,5 @@
 {
-  "when": "2021-07-04T23:52:37.717Z",
+  "when": "2021-07-05T00:19:42.486Z",
   "contracts": {
     "TXValidator": [
       {
@@ -1308,6 +1308,19 @@
         "type": "event"
       },
       {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_store",
+            "type": "address"
+          }
+        ],
+        "name": "StoreUpdated",
+        "type": "event"
+      },
+      {
         "inputs": [],
         "name": "DEFAULT_ADMIN_ROLE",
         "outputs": [
@@ -1356,19 +1369,6 @@
             "internalType": "contract IClaimerMinimal",
             "name": "",
             "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "claimerSet",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
           }
         ],
         "stateMutability": "view",
@@ -1459,6 +1459,32 @@
           }
         ],
         "name": "hasRole",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "isClaimerSet",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "isStoreSet",
         "outputs": [
           {
             "internalType": "bool",
@@ -1602,19 +1628,6 @@
             "internalType": "contract IStoreMinimal",
             "name": "",
             "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "storeSet",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
           }
         ],
         "stateMutability": "view",
@@ -1894,6 +1907,19 @@
         "type": "event"
       },
       {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_store",
+            "type": "address"
+          }
+        ],
+        "name": "StoreUpdated",
+        "type": "event"
+      },
+      {
         "inputs": [],
         "name": "DEFAULT_ADMIN_ROLE",
         "outputs": [
@@ -2103,6 +2129,19 @@
       },
       {
         "inputs": [],
+        "name": "isStoreSet",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
         "name": "probationTime",
         "outputs": [
           {
@@ -2217,19 +2256,6 @@
             "internalType": "contract IStoreMinimal",
             "name": "",
             "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "storeSet",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
           }
         ],
         "stateMutability": "view",
