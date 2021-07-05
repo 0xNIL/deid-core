@@ -21,7 +21,6 @@ contract TXValidator is Ownable, ITXValidator {
     mapping(uint => mapping(address => bool)) private _validatorsByGroupId;
     mapping(address => bytes32) private _validatorsNames;
 
-    address public defaultValidator;
     uint public defaultValidFor = 3e4;
     mapping(uint => uint) public validForByGroupId;
 
@@ -30,18 +29,6 @@ contract TXValidator is Ownable, ITXValidator {
     returns (bool)
     {
         return _validatorsByGroupId[groupId_][validator_];
-    }
-
-    constructor(
-        address defaultValidator_
-    ) {
-        defaultValidator = defaultValidator_;
-    }
-
-    function updateDefaultValidator(address newDefaultValidator_) external override
-    onlyOwner
-    {
-        defaultValidator = newDefaultValidator_;
     }
 
     function _addValidator(uint groupId_, bytes32 validatorName_, address validator_) internal
@@ -136,8 +123,7 @@ contract TXValidator is Ownable, ITXValidator {
     returns (address)
     {
         address validator = ECDSA.recover(hash_, signature_);
-//        console.log("validator %s", validator);
-        if (validator == defaultValidator || _validatorsByGroupId[groupId_][validator]) {
+        if (_validatorsByGroupId[groupId_][validator]) {
             return validator;
         } else {
             return address(0);

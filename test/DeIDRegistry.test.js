@@ -40,7 +40,7 @@ describe("DeIDRegistry", async function () {
     // identity manager
 
     TXValidator = await ethers.getContractFactory("TXValidator");
-    txValidator = await TXValidator.deploy(validator.address);
+    txValidator = await TXValidator.deploy();
     await txValidator.deployed();
 
     DeIDManager = await ethers.getContractFactory("DeIDManager");

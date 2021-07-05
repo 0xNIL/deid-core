@@ -12,8 +12,6 @@ interface ITXValidator {
     event ValidatorAdded(uint groupId, address validator);
     event ValidatorRemoved(uint groupId, address validator);
 
-    function updateDefaultValidator(address newDefaultValidator_) external;
-
     function isValidatorForGroup(uint groupId_, address validator_) external view returns (bool);
 
     function addValidator(uint groupId_, bytes32 validatorName_, address validator_) external;

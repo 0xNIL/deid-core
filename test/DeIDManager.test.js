@@ -52,9 +52,11 @@ describe("DeIDManager", async function () {
     claimer = await DeIDClaimer.deploy(store.address);
     await claimer.deployed();
     TXValidator = await ethers.getContractFactory("TXValidator");
-    txValidator = await TXValidator.deploy(validator.address);
+    txValidator = await TXValidator.deploy();
     await txValidator.deployed();
     await txValidator.addValidator(1, utils.stringToBytes32('tweedentityV2'), validator.address)
+    await txValidator.addValidator(2, utils.stringToBytes32('tweedentityV2'), validator.address)
+    await txValidator.addValidator(3, utils.stringToBytes32('tweedentityV2'), validator.address)
     DeIDManager = await ethers.getContractFactory("DeIDManager");
     identity = await DeIDManager.deploy(store.address, claimer.address, txValidator.address);
     await identity.deployed();
@@ -167,7 +169,7 @@ describe("DeIDManager", async function () {
 
       await assertThrowsMessage(
           identity.connect(bob).setIdentity(6, tid, timestamp, signature),
-          'Unsupported app')
+          'Invalid signature')
     })
 
     it('should throw if already set', async function () {

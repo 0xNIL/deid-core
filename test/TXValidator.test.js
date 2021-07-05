@@ -23,8 +23,9 @@ describe("TXValidator", async function () {
 
   async function initNetworkAndDeploy() {
     TXValidator = await ethers.getContractFactory("TXValidator");
-    txValidator = await TXValidator.deploy(defaultValidator.address);
+    txValidator = await TXValidator.deploy();
     await txValidator.addValidator(1, twitterValidatorName, twitterValidator.address);
+    await txValidator.addValidator(1, instagramValidatorName, instagramValidator.address);
     await txValidator.deployed();
   }
 
