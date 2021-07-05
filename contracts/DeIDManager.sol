@@ -64,14 +64,15 @@ contract DeIDManager is ClaimerCaller, StoreCaller, IDeIDManager {
         _;
     }
 
-    constructor(
+    function configure(
         address store_,
         address claimer_,
         address validator_
-    )
-    StoreCaller(store_)
-    ClaimerCaller(claimer_)
+    ) external
     {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Not authorized");
+        setStore(store_);
+        setClaimer(claimer_);
         validator = ITXValidatorMinimal(validator_);
     }
 

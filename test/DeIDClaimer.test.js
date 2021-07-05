@@ -40,11 +40,16 @@ describe("DeIDClaimer", async function () {
 
   async function initNetworkAndDeploy() {
     DeIDStore = await ethers.getContractFactory("DeIDStore");
-    store = await DeIDStore.deploy(0);
-    await store.deployed();
+    store = await DeIDStore.deploy()
+    await store.deployed()
+    await store.setChain(0)
+    await store.addApp(utils.stringToBytes32('twitter'))
+    await store.addApp(utils.stringToBytes32('reddit'))
+    await store.addApp(utils.stringToBytes32('instagram'))
     DeIDClaimer = await ethers.getContractFactory("DeIDClaimer");
-    claimer = await DeIDClaimer.deploy(store.address);
+    claimer = await DeIDClaimer.deploy();
     await claimer.deployed();
+    await claimer.setStore(store.address)
     const MANAGER_ROLE = await store.MANAGER_ROLE()
     await store.grantRole(MANAGER_ROLE, manager.address)
     await claimer.grantRole(MANAGER_ROLE, manager.address)

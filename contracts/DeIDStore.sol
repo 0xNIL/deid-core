@@ -54,18 +54,16 @@ contract DeIDStore is Application, IDeIDStore {
         _;
     }
 
-    constructor(
+    function setChain (
         uint chainProgressiveId_
-    )
+    ) external override
     {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Not authorized");
         require(
             chainProgressiveId_ < maxNumberOfChains,
             "chainProgressiveId_ must be < 100"
         );
         chainProgressiveId = chainProgressiveId_;
-        addApp(0x7477697474657200000000000000000000000000000000000000000000000000);
-        addApp(0x7265646469740000000000000000000000000000000000000000000000000000);
-        addApp(0x696e7374616772616d0000000000000000000000000000000000000000000000);
     }
 
     function setExtraKey(

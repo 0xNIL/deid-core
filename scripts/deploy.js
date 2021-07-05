@@ -60,35 +60,20 @@ async function deploy(ethers) {
 
     await fs.ensureDir(argumentsDir)
 
-    // const storeAddress = 0x62c6E5fE163aBC080Ae60203952e97D7c37C24b1
-
     // store
     const DeIDStore = await ethers.getContractFactory("DeIDStore");
-    const store = await DeIDStore.deploy(
-        currentChain[1]
-    );
+    const store = await DeIDStore.deploy();
     await store.deployed();
-
-    const storeAddress = store.address
-
-    await fs.writeFile(
-        path.join(argumentsDir, 'DeIDStore.js'),
-        `module.exports = [
-    '${currentChain[1]}'
-]`)
+    await store.setChain(currentChain[1])
+    await store.addApp(utils.stringToBytes32('twitter'))
+    await store.addApp(utils.stringToBytes32('reddit'))
+    await store.addApp(utils.stringToBytes32('instagram'))
 
     // claimer
     const DeIDClaimer = await ethers.getContractFactory("DeIDClaimer");
-    const claimer = await DeIDClaimer.deploy(
-        storeAddress
-    );
+    const claimer = await DeIDClaimer.deploy();
     await claimer.deployed();
-
-    await fs.writeFile(
-        path.join(argumentsDir, 'DeIDClaimer.js'),
-        `module.exports = [
-    '${storeAddress}'
-]`)
+    await claimer.setStore(store.address)
 
     // txValidator
     const TXValidator = await ethers.getContractFactory("TXValidator");
@@ -99,27 +84,15 @@ async function deploy(ethers) {
     await txValidator.addValidator(2, utils.stringToBytes32('0xnil'), validator)
     await txValidator.addValidator(3, utils.stringToBytes32('0xnil'), validator)
 
-//     await fs.writeFile(
-//         path.join(argumentsDir, 'TXValidator.js'),
-//         `module.exports = [
-//     '${validator}'
-// ]`)
-
     // identity manager
     const DeIDManager = await ethers.getContractFactory("DeIDManager");
-    const manager = await DeIDManager.deploy(
-        storeAddress,
+    const manager = await DeIDManager.deploy();
+    await manager.deployed();
+    await manager.configure(
+        store.address,
         claimer.address,
         txValidator.address
     );
-
-    await fs.writeFile(
-        path.join(argumentsDir, 'DeIDManager.js'),
-        `module.exports = [
-    '${storeAddress}',
-    '${claimer.address}',
-    '${txValidator.address}'
-]`)
 
     const MANAGER_ROLE = await store.MANAGER_ROLE()
     await store.grantRole(MANAGER_ROLE, manager.address)
@@ -144,7 +117,7 @@ async function deploy(ethers) {
 
     let addresses = [
         txValidator.address,
-        storeAddress,
+        store.address,
         manager.address,
         claimer.address
     ]
@@ -160,7 +133,7 @@ async function deploy(ethers) {
 
     let res = {
         TxValidator: txValidator.address,
-        DeIDStore: storeAddress,
+        DeIDStore: store.address,
         DeIDManager: manager.address,
         DeIDClaimer: claimer.address,
         DeIDRegistry: registry.address
