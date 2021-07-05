@@ -1,7 +1,18 @@
 {
-  "when": "2021-07-04T19:11:20.433Z",
+  "when": "2021-07-04T23:52:37.717Z",
   "contracts": {
     "TXValidator": [
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "defaultValidator_",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
       {
         "anonymous": false,
         "inputs": [
@@ -109,6 +120,19 @@
             "internalType": "uint256",
             "name": "",
             "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "defaultValidator",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
           }
         ],
         "stateMutability": "view",
@@ -270,6 +294,19 @@
           }
         ],
         "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newDefaultValidator_",
+            "type": "address"
+          }
+        ],
+        "name": "updateDefaultValidator",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -1350,77 +1387,9 @@
             "type": "uint256"
           },
           {
-            "internalType": "uint256[]",
-            "name": "ids_",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp_",
-            "type": "uint256"
-          }
-        ],
-        "name": "encodeForSignature",
-        "outputs": [
-          {
-            "internalType": "bytes32",
-            "name": "",
-            "type": "bytes32"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "address_",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "groupId_",
-            "type": "uint256"
-          },
-          {
             "internalType": "uint256",
             "name": "id_",
             "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp_",
-            "type": "uint256"
-          }
-        ],
-        "name": "encodeForSignature",
-        "outputs": [
-          {
-            "internalType": "bytes32",
-            "name": "",
-            "type": "bytes32"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "address_",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "groupIds_",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "ids_",
-            "type": "uint256[]"
           },
           {
             "internalType": "uint256",
@@ -1714,6 +1683,19 @@
         "name": "updateIdentity",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "validator",
+        "outputs": [
+          {
+            "internalType": "contract ITXValidatorMinimal",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
         "type": "function"
       }
     ],
@@ -2292,22 +2274,6 @@
       }
     ],
     "DeIDRegistry": [
-      {
-        "inputs": [
-          {
-            "internalType": "bytes32[]",
-            "name": "names_",
-            "type": "bytes32[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "addresses_",
-            "type": "address[]"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-      },
       {
         "anonymous": false,
         "inputs": [

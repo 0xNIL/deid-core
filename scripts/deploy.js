@@ -60,12 +60,16 @@ async function deploy(ethers) {
 
     await fs.ensureDir(argumentsDir)
 
+    // const storeAddress = 0x62c6E5fE163aBC080Ae60203952e97D7c37C24b1
+
     // store
     const DeIDStore = await ethers.getContractFactory("DeIDStore");
     const store = await DeIDStore.deploy(
         currentChain[1]
     );
     await store.deployed();
+
+    const storeAddress = store.address
 
     await fs.writeFile(
         path.join(argumentsDir, 'DeIDStore.js'),
@@ -76,14 +80,14 @@ async function deploy(ethers) {
     // claimer
     const DeIDClaimer = await ethers.getContractFactory("DeIDClaimer");
     const claimer = await DeIDClaimer.deploy(
-        store.address
+        storeAddress
     );
     await claimer.deployed();
 
     await fs.writeFile(
         path.join(argumentsDir, 'DeIDClaimer.js'),
         `module.exports = [
-    '${store.address}'
+    '${storeAddress}'
 ]`)
 
     // txValidator
@@ -100,7 +104,7 @@ async function deploy(ethers) {
     // identity manager
     const DeIDManager = await ethers.getContractFactory("DeIDManager");
     const manager = await DeIDManager.deploy(
-        store.address,
+        storeAddress,
         claimer.address,
         txValidator.address
     );
@@ -108,7 +112,7 @@ async function deploy(ethers) {
     await fs.writeFile(
         path.join(argumentsDir, 'DeIDManager.js'),
         `module.exports = [
-    '${store.address}',
+    '${storeAddress}',
     '${claimer.address}',
     '${txValidator.address}'
 ]`)
@@ -136,7 +140,7 @@ async function deploy(ethers) {
 
     let addresses = [
         txValidator.address,
-        store.address,
+        storeAddress,
         manager.address,
         claimer.address
     ]
@@ -152,7 +156,7 @@ async function deploy(ethers) {
 
     let res = {
         TxValidator: txValidator.address,
-        DeIDStore: store.address,
+        DeIDStore: storeAddress,
         DeIDManager: manager.address,
         DeIDClaimer: claimer.address,
         DeIDRegistry: registry.address

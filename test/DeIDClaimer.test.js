@@ -63,7 +63,7 @@ describe("DeIDClaimer", async function () {
     });
 
     it("should verify that the claimer can manage the store", async function () {
-      assert.equal(await claimer.storeSet(), true)
+      assert.equal(await claimer.isStoreSet(), true)
     });
 
   })
