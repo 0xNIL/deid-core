@@ -92,14 +92,18 @@ async function deploy(ethers) {
 
     // txValidator
     const TXValidator = await ethers.getContractFactory("TXValidator");
-    const txValidator = await TXValidator.deploy(validator);
+    const txValidator = await TXValidator.deploy();
     await txValidator.deployed();
 
-    await fs.writeFile(
-        path.join(argumentsDir, 'TXValidator.js'),
-        `module.exports = [
-    '${validator}'
-]`)
+    await txValidator.addValidator(1, utils.stringToBytes32('0xnil'), validator)
+    await txValidator.addValidator(2, utils.stringToBytes32('0xnil'), validator)
+    await txValidator.addValidator(3, utils.stringToBytes32('0xnil'), validator)
+
+//     await fs.writeFile(
+//         path.join(argumentsDir, 'TXValidator.js'),
+//         `module.exports = [
+//     '${validator}'
+// ]`)
 
     // identity manager
     const DeIDManager = await ethers.getContractFactory("DeIDManager");
