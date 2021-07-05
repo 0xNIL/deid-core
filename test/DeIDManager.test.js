@@ -46,11 +46,16 @@ describe("DeIDManager", async function () {
 
   async function initNetworkAndDeploy() {
     DeIDStore = await ethers.getContractFactory("DeIDStore");
-    store = await DeIDStore.deploy(0);
-    await store.deployed();
+    store = await DeIDStore.deploy()
+    await store.deployed()
+    await store.setChain(0)
+    await store.addApp(utils.stringToBytes32('twitter'))
+    await store.addApp(utils.stringToBytes32('reddit'))
+    await store.addApp(utils.stringToBytes32('instagram'))
     DeIDClaimer = await ethers.getContractFactory("DeIDClaimer");
-    claimer = await DeIDClaimer.deploy(store.address);
+    claimer = await DeIDClaimer.deploy();
     await claimer.deployed();
+    await claimer.setStore(store.address)
     TXValidator = await ethers.getContractFactory("TXValidator");
     txValidator = await TXValidator.deploy();
     await txValidator.deployed();
@@ -58,8 +63,9 @@ describe("DeIDManager", async function () {
     await txValidator.addValidator(2, utils.stringToBytes32('tweedentityV2'), validator.address)
     await txValidator.addValidator(3, utils.stringToBytes32('tweedentityV2'), validator.address)
     DeIDManager = await ethers.getContractFactory("DeIDManager");
-    identity = await DeIDManager.deploy(store.address, claimer.address, txValidator.address);
+    identity = await DeIDManager.deploy();
     await identity.deployed();
+    await identity.configure(store.address, claimer.address, txValidator.address)
     const MANAGER_ROLE = await store.MANAGER_ROLE()
     await store.grantRole(MANAGER_ROLE, identity.address)
     await store.grantRole(MANAGER_ROLE, claimer.address)

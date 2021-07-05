@@ -39,8 +39,12 @@ describe("DeIDStore", async function () {
 
   async function initNetworkAndDeploy() {
     DeIDStore = await ethers.getContractFactory("DeIDStore")
-    store = await DeIDStore.deploy(0)
+    store = await DeIDStore.deploy()
     await store.deployed()
+    await store.setChain(0)
+    await store.addApp(utils.stringToBytes32('twitter'))
+    await store.addApp(utils.stringToBytes32('reddit'))
+    await store.addApp(utils.stringToBytes32('instagram'))
     const MANAGER_ROLE = await store.MANAGER_ROLE()
     await store.grantRole(MANAGER_ROLE, manager.address)
   }

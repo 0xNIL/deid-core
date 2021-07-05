@@ -23,14 +23,6 @@ contract DeIDClaimer is StoreCaller, IDeIDClaimer {
     mapping(uint => mapping(address => uint)) private _claimByAddress;
 
 
-    constructor(
-        address store_
-    )
-    StoreCaller(store_)
-    {
-    }
-
-
     function updateProbationTimes(
         uint probationTime_,
         uint afterProbationTime_

@@ -16,6 +16,8 @@ interface IDeIDStore {
 
     event UniqueDataChanged(uint indexed _id, bytes32 indexed key, bytes32 value);
 
+    function setChain (uint chainProgressiveId_) external;
+
     function setExtraKey(bytes32 key_, bool unique_, bool immutable_) external;
 
     function getExtras(address address_, bytes32 key_) external view returns (bytes memory value_);

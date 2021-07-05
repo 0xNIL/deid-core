@@ -4,7 +4,10 @@
       "address": "0xC408861DD54174917506F347Cc6FD2c888322D7E",
       "when": "2021-07-04T21:36:14.037Z"
     },
-    "previousVersions": [
-    ]
+    "1337": {
+      "address": "0x67d269191c92Caf3cD7723F116c85e6E9bf55933",
+      "when": "2021-07-05T17:42:03.551Z"
+    },
+    "previousVersions": []
   }
 }

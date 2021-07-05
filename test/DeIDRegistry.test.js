@@ -31,11 +31,11 @@ describe("DeIDRegistry", async function () {
   async function initNetworkAndDeploy() {
     // store
     DeIDStore = await ethers.getContractFactory("DeIDStore");
-    store = await DeIDStore.deploy(0);
+    store = await DeIDStore.deploy();
     await store.deployed();
     //claimer
     DeIDClaimer = await ethers.getContractFactory("DeIDClaimer");
-    claimer = await DeIDClaimer.deploy(store.address);
+    claimer = await DeIDClaimer.deploy();
     await claimer.deployed();
     // identity manager
 
@@ -44,13 +44,8 @@ describe("DeIDRegistry", async function () {
     await txValidator.deployed();
 
     DeIDManager = await ethers.getContractFactory("DeIDManager");
-    identity = await DeIDManager.deploy(store.address, claimer.address, txValidator.address);
+    identity = await DeIDManager.deploy();
     await identity.deployed();
-
-    const MANAGER_ROLE = await store.MANAGER_ROLE()
-    await store.grantRole(MANAGER_ROLE, identity.address)
-    await store.grantRole(MANAGER_ROLE, claimer.address)
-    await claimer.grantRole(MANAGER_ROLE, identity.address)
 
     Registry = await ethers.getContractFactory("DeIDRegistry");
     registry = await Registry.deploy();
