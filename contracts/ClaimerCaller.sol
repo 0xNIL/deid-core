@@ -11,8 +11,6 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-import "./interfaces/IClaimerCaller.sol";
-
 interface IClaimerMinimal {
 
     function setClaim(
@@ -20,7 +18,6 @@ interface IClaimerMinimal {
         uint id_,
         address claimer_
     ) external;
-
 
     function setClaimedIdentity(
         uint appId_,
@@ -30,15 +27,18 @@ interface IClaimerMinimal {
 
 }
 
-contract ClaimerCaller is AccessControl, IClaimerCaller {
+contract ClaimerCaller is AccessControl {
+
+    event ClaimerSet(address indexed _store);
+    event ClaimerUpdated(address indexed _store);
 
     IClaimerMinimal public claimer;
 
-    bool public claimerSet;
+    bool public isClaimerSet;
 
     modifier onlyIfClaimerSet() {
         require(
-            claimerSet,
+            isClaimerSet,
             "Claimer not set yet"
         );
         _;
@@ -54,13 +54,13 @@ contract ClaimerCaller is AccessControl, IClaimerCaller {
 
     function setClaimer(
         address claimer_
-    ) public override
+    ) public
     {
         require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Not authorized");
         if (claimer_ != address(0)) {
             claimer = IClaimerMinimal(claimer_);
-            if (!claimerSet) {
-                claimerSet = true;
+            if (!isClaimerSet) {
+                isClaimerSet = true;
                 emit ClaimerSet(claimer_);
             } else {
                 emit ClaimerUpdated(claimer_);

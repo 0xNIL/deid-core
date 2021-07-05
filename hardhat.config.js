@@ -51,8 +51,7 @@ module.exports = {
     },
     ethereum: {
       url: `https://mainnet.infura.io/v3/${env.infuraApiKey}`,
-      accounts: [env.privateKey],
-      gasPrice: 4000000000
+      accounts: [env.privateKey]
     },
     bsc_testnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",

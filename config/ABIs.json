@@ -1,7 +1,18 @@
 {
-  "when": "2021-07-04T19:11:20.433Z",
+  "when": "2021-07-05T00:19:42.486Z",
   "contracts": {
     "TXValidator": [
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "defaultValidator_",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
       {
         "anonymous": false,
         "inputs": [
@@ -109,6 +120,19 @@
             "internalType": "uint256",
             "name": "",
             "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "defaultValidator",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
           }
         ],
         "stateMutability": "view",
@@ -270,6 +294,19 @@
           }
         ],
         "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newDefaultValidator_",
+            "type": "address"
+          }
+        ],
+        "name": "updateDefaultValidator",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -1271,6 +1308,19 @@
         "type": "event"
       },
       {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_store",
+            "type": "address"
+          }
+        ],
+        "name": "StoreUpdated",
+        "type": "event"
+      },
+      {
         "inputs": [],
         "name": "DEFAULT_ADMIN_ROLE",
         "outputs": [
@@ -1325,53 +1375,6 @@
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "claimerSet",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "address_",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "groupId_",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "ids_",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp_",
-            "type": "uint256"
-          }
-        ],
-        "name": "encodeForSignature",
-        "outputs": [
-          {
-            "internalType": "bytes32",
-            "name": "",
-            "type": "bytes32"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
         "inputs": [
           {
             "internalType": "address",
@@ -1387,40 +1390,6 @@
             "internalType": "uint256",
             "name": "id_",
             "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp_",
-            "type": "uint256"
-          }
-        ],
-        "name": "encodeForSignature",
-        "outputs": [
-          {
-            "internalType": "bytes32",
-            "name": "",
-            "type": "bytes32"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "address_",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "groupIds_",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "ids_",
-            "type": "uint256[]"
           },
           {
             "internalType": "uint256",
@@ -1490,6 +1459,32 @@
           }
         ],
         "name": "hasRole",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "isClaimerSet",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "isStoreSet",
         "outputs": [
           {
             "internalType": "bool",
@@ -1639,19 +1634,6 @@
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "storeSet",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
         "inputs": [
           {
             "internalType": "bytes4",
@@ -1714,6 +1696,19 @@
         "name": "updateIdentity",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "validator",
+        "outputs": [
+          {
+            "internalType": "contract ITXValidatorMinimal",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
         "type": "function"
       }
     ],
@@ -1909,6 +1904,19 @@
           }
         ],
         "name": "StoreSet",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "_store",
+            "type": "address"
+          }
+        ],
+        "name": "StoreUpdated",
         "type": "event"
       },
       {
@@ -2121,6 +2129,19 @@
       },
       {
         "inputs": [],
+        "name": "isStoreSet",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
         "name": "probationTime",
         "outputs": [
           {
@@ -2241,19 +2262,6 @@
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "storeSet",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
         "inputs": [
           {
             "internalType": "bytes4",
@@ -2292,22 +2300,6 @@
       }
     ],
     "DeIDRegistry": [
-      {
-        "inputs": [
-          {
-            "internalType": "bytes32[]",
-            "name": "names_",
-            "type": "bytes32[]"
-          },
-          {
-            "internalType": "address[]",
-            "name": "addresses_",
-            "type": "address[]"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-      },
       {
         "anonymous": false,
         "inputs": [

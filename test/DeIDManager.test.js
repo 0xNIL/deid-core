@@ -79,8 +79,8 @@ describe("DeIDManager", async function () {
     it("should verify that the manager can manage store and claimer", async function () {
       // assert.equal(await store.managers(identity.address), true)
       // assert.equal(await claimer.managers(identity.address), true)
-      assert.equal(await identity.storeSet(), true)
-      assert.equal(await identity.claimerSet(), true)
+      assert.equal(await identity.isStoreSet(), true)
+      assert.equal(await identity.isClaimerSet(), true)
     });
 
   })

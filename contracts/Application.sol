@@ -11,9 +11,9 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 // import "hardhat/console.sol";
 
-import "./interfaces/IApplication.sol";
+contract Application is AccessControl {
 
-contract Application is AccessControl, IApplication {
+    event AppAdded(uint indexed id, bytes32 indexed nickname);
 
     uint constant public maxNumberOfApps = 100;
 
@@ -27,7 +27,7 @@ contract Application is AccessControl, IApplication {
 
     function addApp(
         bytes32 nickname_
-    ) public override
+    ) public
     {
         require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Not authorized");
         require(

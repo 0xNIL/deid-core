@@ -10,9 +10,9 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "./interfaces/IDeIDRegistry.sol";
+contract DeIDRegistry is Ownable {
 
-contract DeIDRegistry is Ownable, IDeIDRegistry {
+    event RegistryUpdated(bytes32 contractName, address contractAddress);
 
     mapping(bytes32 => address) public registry;
 
@@ -20,7 +20,7 @@ contract DeIDRegistry is Ownable, IDeIDRegistry {
         bytes32 name_,
         address address_
     )
-    public override
+    public
     onlyOwner
     {
         if (address_ != address(0)) {
@@ -33,7 +33,7 @@ contract DeIDRegistry is Ownable, IDeIDRegistry {
         bytes32 name_,
         address address_
     )
-    external override
+    external
     onlyOwner
     {
         require(
