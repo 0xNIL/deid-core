@@ -179,7 +179,7 @@ contract DeIDManager is ClaimerCaller, StoreCaller, IDeIDManager {
     {
         return keccak256(
             abi.encodePacked(
-                "\x19\x00",
+                "\x19\x01",
                 address_,
                 validator.getChainId(),
                 groupId_,
